@@ -12,6 +12,10 @@ param(
 #$root = Split-Path -parent $MyInvocation.MyCommand.Definition
 $root = (Split-Path $script:MyInvocation.MyCommand.Path)
 
+$psversion = $host.Runspace.Version.Major
+
+Write-Host "ps version: $psversion"
+
 Write-Host "root: $root"
 
 Import-Module $root\tools\psake\psake.psm1 -ErrorAction SilentlyContinue
