@@ -9,7 +9,8 @@ Write-Host $MyInvocation.MyCommand.Definition
 Write-Host $MyInvocation.MyCommand.Path
 Write-Host $MyInvocation.MyCommand.Name
 
-$root = Split-Path -parent $MyInvocation.MyCommand.Definition
+#$root = Split-Path -parent $MyInvocation.MyCommand.Definition
+$root = (Split-Path $script:MyInvocation.MyCommand.Path)
 
 Import-Module $root\tools\psake\psake.psm1 -ErrorAction SilentlyContinue
 
