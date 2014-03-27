@@ -3,7 +3,7 @@
 	$ProductVersion = "1.0"
 	$BuildNumber = "0";
 	$PatchVersion = "2"
-	$TargetFramework = "net-4.5"
+	$TargetFramework = "net-4.0"
 	$DownloadDependentPackages = $true
 	$UploadPackage = $false
 	$NugetKey = ""
@@ -12,7 +12,7 @@
 
 $baseDir  = resolve-path .
 $releaseRoot = "$baseDir\Release"
-$releaseDir = "$releaseRoot\net45"
+$releaseDir = "$releaseRoot\net40"
 $buildBase = "$baseDir\build"
 $sourceDir = "$baseDir"
 $outDir =  "$buildBase\output"
@@ -26,7 +26,7 @@ $script:ilmergeTargetFramework = ""
 $script:msBuildTargetFramework = ""	
 $script:packageVersion = "0.1.1.6"
 $nunitexec = "packages\nunit.runners.2.6.2\tools\nunit-console.exe"
-$script:nunitTargetFramework = "/framework=4.5";
+$script:nunitTargetFramework = "/framework=4.0";
 
 include $toolsDir\psake\buildutils.ps1
 
@@ -71,7 +71,7 @@ task InstallDependentPackages {
 task InitEnvironment -depends DetectOperatingSystemArchitecture {
 
 	if($script:isEnvironmentInitialized -ne $true){
-		if ($TargetFramework -eq "net-4.5"){
+		if ($TargetFramework -eq "net-4.0"){
 			$netfxInstallroot ="" 
 			$netfxInstallroot =	Get-RegistryValue 'HKLM:\SOFTWARE\Microsoft\.NETFramework\' 'InstallRoot' 
 			
@@ -79,7 +79,7 @@ task InitEnvironment -depends DetectOperatingSystemArchitecture {
 			
 			$script:msBuild = $netfxCurrent + "\msbuild.exe"
 			
-			echo ".Net 4.5 build requested - $script:msBuild" 
+			echo ".Net 4.0 build requested - $script:msBuild" 
 		
 			
 			$programFilesPath = (gc env:ProgramFiles)
@@ -89,10 +89,10 @@ task InitEnvironment -depends DetectOperatingSystemArchitecture {
 			
 			$frameworkPath = Join-Path $programFilesPath "Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0"
 			
-			$script:ilmergeTargetFramework  =  "v4.5,$frameworkPath"
-			$script:msBuildTargetFramework ="/p:TargetFrameworkVersion=v4.5 /ToolsVersion:4.5"
+			$script:ilmergeTargetFramework  =  "v4,$frameworkPath"
+			$script:msBuildTargetFramework ="/p:TargetFrameworkVersion=v4.0 /ToolsVersion:4.0"
 			
-			$script:nunitTargetFramework = "/framework=4.5";
+			$script:nunitTargetFramework = "/framework=4.0";
 			
 			$script:isEnvironmentInitialized = $true
 		}
@@ -138,8 +138,8 @@ task PrepareRelease -depends CompileMain, TestMain {
 	}
 	
 	Create-Directory $releaseRoot
-	if ($TargetFramework -eq "net-4.5"){
-		$releaseDir = "$releaseRoot\net45"
+	if ($TargetFramework -eq "net-4.0"){
+		$releaseDir = "$releaseRoot\net40"
 	}
 	Create-Directory $releaseDir
 	
@@ -148,7 +148,7 @@ task PrepareRelease -depends CompileMain, TestMain {
  
 task CreatePackages -depends PrepareRelease  {
 
-	$packageName = "BT-Gelf4net"
+	$packageName = "BT-Gelf4Net"
 	if($isCIBuild) {
 		$packageName += "-CI"
 	}
@@ -164,7 +164,7 @@ task CreatePackages -depends PrepareRelease  {
 	$packit.framework_Isolated_Binaries_Loc = "$baseDir\release"
 	$packit.PackagingArtifactsRoot = "$baseDir\release\PackagingArtifacts"
 	$packit.packageOutPutDir = "$baseDir\release\packages"
-	$packit.targeted_Frameworks = "net45";
+	$packit.targeted_Frameworks = "net40";
 
 	#region Packing
 	$packit.package_description = "GELF log4net Appender - graylog2. Built for log4net 1.2.10"
