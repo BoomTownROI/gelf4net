@@ -3,7 +3,7 @@
 	$ProductVersion = "1.0"
 	$BuildNumber = "0";
 	$PatchVersion = "2"
-	$TargetFramework = "net-4.0"
+	$TargetFramework = "net-4.5.1"
 	$DownloadDependentPackages = $true
 	$UploadPackage = $false
 	$NugetKey = ""
@@ -24,9 +24,9 @@ $script:msBuild = ""
 $script:isEnvironmentInitialized = $false
 $script:ilmergeTargetFramework = ""
 $script:msBuildTargetFramework = ""	
-$script:packageVersion = "0.1.1.6"
+$script:packageVersion = "0.1.1.8"
 $nunitexec = "packages\nunit.runners.2.6.2\tools\nunit-console.exe"
-$script:nunitTargetFramework = "/framework=4.0";
+$script:nunitTargetFramework = "/framework=4.5.1";
 
 include $toolsDir\psake\buildutils.ps1
 
@@ -71,7 +71,7 @@ task InstallDependentPackages {
 task InitEnvironment -depends DetectOperatingSystemArchitecture {
 
 	if($script:isEnvironmentInitialized -ne $true){
-		if ($TargetFramework -eq "net-4.0"){
+		if ($TargetFramework -eq "net-4.5.1"){
 			$netfxInstallroot ="" 
 			$netfxInstallroot =	Get-RegistryValue 'HKLM:\SOFTWARE\Microsoft\.NETFramework\' 'InstallRoot' 
 			
@@ -79,7 +79,7 @@ task InitEnvironment -depends DetectOperatingSystemArchitecture {
 			
 			$script:msBuild = $netfxCurrent + "\msbuild.exe"
 			
-			echo ".Net 4.0 build requested - $script:msBuild" 
+			echo ".Net 4.5.1 build requested - $script:msBuild" 
 		
 			
 			$programFilesPath = (gc env:ProgramFiles)
@@ -90,9 +90,9 @@ task InitEnvironment -depends DetectOperatingSystemArchitecture {
 			$frameworkPath = Join-Path $programFilesPath "Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0"
 			
 			$script:ilmergeTargetFramework  =  "v4,$frameworkPath"
-			$script:msBuildTargetFramework ="/p:TargetFrameworkVersion=v4.0 /ToolsVersion:4.0"
+			$script:msBuildTargetFramework ="/p:TargetFrameworkVersion=v4.5.1 /ToolsVersion:4.0"
 			
-			$script:nunitTargetFramework = "/framework=4.0";
+			$script:nunitTargetFramework = "/framework=4.5.1";
 			
 			$script:isEnvironmentInitialized = $true
 		}
@@ -138,8 +138,8 @@ task PrepareRelease -depends CompileMain, TestMain {
 	}
 	
 	Create-Directory $releaseRoot
-	if ($TargetFramework -eq "net-4.0"){
-		$releaseDir = "$releaseRoot\net40"
+	if ($TargetFramework -eq "net-4.5.1"){
+		$releaseDir = "$releaseRoot\net451"
 	}
 	Create-Directory $releaseDir
 	
@@ -164,19 +164,19 @@ task CreatePackages -depends PrepareRelease  {
 	$packit.framework_Isolated_Binaries_Loc = "$baseDir\release"
 	$packit.PackagingArtifactsRoot = "$baseDir\release\PackagingArtifacts"
 	$packit.packageOutPutDir = "$baseDir\release\packages"
-	$packit.targeted_Frameworks = "net40";
+	$packit.targeted_Frameworks = "net451";
 
 	#region Packing
-	$packit.package_description = "GELF log4net Appender - graylog2. Built for log4net 1.2.10"
-	$script:packit.package_owners = "micahlmartin"
-	$script:packit.package_authors = "micahlmartin"
+	$packit.package_description = "GELF log4net Appender - graylog2. Built for log4net 2.0.3"
+	$script:packit.package_owners = "BoomTownROI"
+	$script:packit.package_authors = "BoomTownROI"
 	$script:packit.release_notes = ""
 	$script:packit.package_licenseUrl = "http://www.apache.org/licenses/LICENSE-2.0.html"
-	$script:packit.package_projectUrl = "https://github.com/micahlmartin/gelf4net"
+	$script:packit.package_projectUrl = "https://github.com/BoomTownROI/gelf4net"
 	$script:packit.package_tags = "tools utilities"
 	$script:packit.package_iconUrl = "http://nuget.org/Content/Images/packageDefaultIcon.png"
 	$script:packit.versionAssemblyName = $script:packit.binaries_Location + "\gelf4net.dll"
-	invoke-packit $packageName $PackageVersion @{"log4net"="1.2.10"} "binaries\gelf4net.dll" @{} 
+	invoke-packit $packageName $PackageVersion @{"log4net"="2.0.3"} "binaries\gelf4net.dll" @{} 
 	#endregion
 		
 	remove-module packit
@@ -203,7 +203,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyCompany(""gelf4net"")]
 [assembly: AssemblyFileVersion(""$asmVersion"")]
 [assembly: AssemblyVersion(""$asmVersion"")]	
-[assembly: AssemblyCopyright(""Copyright ©  2011"")]
+[assembly: AssemblyCopyright(""Copyright ©  2014"")]
 [assembly: ComVisible(false)]	
 "
 
